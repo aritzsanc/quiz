@@ -18,3 +18,5 @@ nav span             { margin: 0px 10px 0px 0px;
 .quiz_img 			 { height: 150px; float: left;}
 
 footer > a {margin: 5px}
+
+#tab_preguntas {margin: auto; text-align: left;}
