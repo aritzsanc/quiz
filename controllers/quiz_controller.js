@@ -14,15 +14,17 @@ exports.load = function(req, res, next, quizId){
 };
 //GET	/quizes/
 exports.index = function(req, res){
-	console.log("se ha pedido quizes/index");
 	var search = req.query.search || "";
+	var search_tema = req.query.search_tema || "%%";
 	search = "%" + search.replace(/ /g, "%") + "%";
-	models.Quiz.findAll({where: ["pregunta like ?", search]}).then(
+	models.Quiz.findAll({where: {
+																pregunta: {like: search},
+																tema: {like :search_tema}}})
+	.then(
 	function(quizes){
-		console.log(quizes);
-		res.render('quizes/index', { quizes : quizes, errors: []});
+		res.render('quizes/index', { quizes : quizes, temas: models.temas, errors: []});
 	}).catch(function(error) {next(error);});
-};
+};//TODO añadir la busqueda por tema
 
 //GET	/quizes/:id
 exports.show = function(req, res){
@@ -41,9 +43,9 @@ exports.answer = function(req, res){
 //GET	/quizes/new
 exports.new = function(req, res){
 	var quiz = models.Quiz.build(//crea objeto quiz
-	{pregunta:"Pregunta", respuesta:"Respuesta"}
+	{pregunta:"Pregunta", respuesta:"Respuesta", tema: ""}
 	);
-	res.render('quizes/new', { quiz : quiz, errors: []});
+	res.render('quizes/new', { quiz : quiz, temas: models.temas, errors: []});
 };
 
 //POST	/quizes/create
@@ -55,7 +57,7 @@ exports.create = function(req, res){
 		for (var prop in errors) errores[i++]={message: errors[prop]};
 		res.render('quizes/new', {quiz: quiz, errors:errores});
 	}else{
-		quiz.save({fields:["pregunta", "respuesta"]})
+		quiz.save({fields:["pregunta", "respuesta", "tema"]})
 				.then(function(){res.redirect('/quizes');});
 	}
 };
@@ -63,21 +65,21 @@ exports.create = function(req, res){
 //GET /quizes/:id/edit
 exports.edit = function(req, res){
 	var quiz = req.quiz;
-	res.render('quizes/edit', {quiz: quiz, errors: []});
+	res.render('quizes/edit', {quiz: quiz, temas: models.temas, errors: []});
 };
 
 //PUT /quizes/:id/
 exports.update = function(req, res){
 	req.quiz.pregunta = req.body.quiz.pregunta;
 	req.quiz.respuesta = req.body.quiz.respuesta;
-
+	req.quiz.tema = req.body.quiz.tema;
 	var errors = req.quiz.validate();
 	if(errors){
 		var i=0; var errores=new Array();
 		for (var prop in errors) errores[i++]={message: errors[prop]};
-		res.render('quizes/edit', {quiz: quiz, errors:errores});
+		res.render('quizes/edit', {quiz: req.quiz, errors:errores});
 	}else{
-		req.quiz.save({fields:["pregunta", "respuesta"]})
+		req.quiz.save({fields:["pregunta", "respuesta", "tema"]})
 				.then(function(){res.redirect('/quizes');});
 	}
 

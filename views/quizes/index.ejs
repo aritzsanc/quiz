@@ -3,6 +3,13 @@
 	<form method="get" action="/quizes">
 		<p> Introduzca el texto a buscar</p>
 		<input type="text" name="search" value="Busqueda" />
+		<select name="search_tema">
+			<option value="%%" selected>Todos</option>
+			<% for(var i=0; i < temas.length; i++){ %>
+				<option value="<%= temas[i] %>"><%= temas[i] %></option>
+			<% } %>
+		</select>
+
 		<input type="submit" value="Buscar" />
 	</form>
 </div>
