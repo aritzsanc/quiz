@@ -24,7 +24,7 @@ exports.index = function(req, res){
 	function(quizes){
 		res.render('quizes/index', { quizes : quizes, temas: models.temas, errors: []});
 	}).catch(function(error) {next(error);});
-};//TODO añadir la busqueda por tema
+};
 
 //GET	/quizes/:id
 exports.show = function(req, res){
