@@ -1,0 +1,7 @@
+<strong><%= quiz.pregunta %></strong><p>
+Añadir comentario: <p>
+
+<form method="post" action="/quizes/<%=quiz.id%>/comments/">
+  <textarea id="comment" name="comment[texto]" cols="20" rows="8"></textarea><p>
+  <button type="submit">Enviar Comentario</button>
+</form>

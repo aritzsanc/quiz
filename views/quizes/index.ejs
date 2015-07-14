@@ -15,10 +15,12 @@
 </div>
 <br>
 <div>
-	<table id="tab_preguntas">
+	<table id="tab_preguntas" style="text-align:center">
+		<tr><td>Índice</td><td>Tema</td><td> Pregunta</td><td></td><td></td></tr>
 		<% for(var i=0; i < quizes.length; i++){ %>
 			<tr>
 				<td><a href="/quizes/<%= quizes[i].id %>"><%= i+1 %></a></td>
+				<td><a href="/quizes?search_tema=<%= quizes[i].tema %>"><%= quizes[i].tema %></a></td>
 				<td><a href="/quizes/<%= quizes[i].id %>"><%= quizes[i].pregunta %></a></td>
 				<td><a href="/quizes/<%= quizes[i].id %>/edit"><button>Editar</button></a></td>
 				<td>
