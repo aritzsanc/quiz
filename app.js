@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var partials = require('express-partials');
 var methodOverride = require('method-override');
+var session = require('express-session');
 
 var routes = require('./routes/index');
 //se elimina esta línea ya que la gestión de usuario se hará de otra forma
@@ -23,9 +24,20 @@ app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
-app.use(cookieParser());
+app.use(cookieParser('Quiz AZS'));
+app.use(session());
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(function(req, res, next){
+  //guardar path de session.redir para después del login
+  if(!req.path.match(/\/login|\/logout/)){
+    req.session.redir=req.path;
+  }
+  //hacer visible req.session en als vistas
+  res.locals.session = req.session;
+  next();
+});
 
 app.use('/', routes);
 //se elimina esta línea ya que la gestión de usuario se hará de otra forma
