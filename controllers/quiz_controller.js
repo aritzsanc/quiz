@@ -19,7 +19,8 @@ exports.index = function(req, res){
 	search = "%" + search.replace(/ /g, "%") + "%";
 	models.Quiz.findAll({where: {
 																pregunta: {like: search},
-																tema: {like :search_tema}}})
+																tema: {like :search_tema}},
+											order:[["pregunta", "ASC"]]})
 	.then(
 	function(quizes){
 		res.render('quizes/index', { quizes : quizes, temas: models.temas, errors: []});
