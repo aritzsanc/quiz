@@ -1,5 +1,19 @@
 var models = require('../models/models.js');
 
+// Autoload :id de comentarios
+exports.load = function(req, res, next, commentId){
+  models.Comment.find({
+    where:{id: Number(commentId)}
+  }).then(function(comment){
+    if(comment) {
+      req.comment = comment;
+      next();
+    }else{
+      next(new Error('No existe commentId=' + commentId))
+    }
+  }
+  ).catch(function(error){next(error)});
+};
 
 //GET /quizes/:quizId/comment/new
 exports.new = function(req, res){
@@ -27,4 +41,13 @@ exports.create = function(req, res){
       .then(function(){res.redirect('/quizes/'+req.params.quizId)})
     }
   //.catch(function(error){next(error)});
+};
+
+//GET  /quizes/:quizId/comments/:commentId/publish
+exports.publish = function(req, res){
+  req.comment.publicado = true;
+
+  req.comment.save ()//si pongo solo el campo no va bien??? problema de versiones???
+    .then(function(){res.redirect('/quizes/'+req.params.quizId);})
+    .catch(function(error){next(error)});
 };
