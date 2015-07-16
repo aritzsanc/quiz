@@ -9,7 +9,6 @@ var methodOverride = require('method-override');
 var session = require('express-session');
 
 var routes = require('./routes/index');
-//se elimina esta línea ya que la gestión de usuario se hará de otra forma
 //var users = require('./routes/users');
 
 var app = express();
@@ -34,9 +33,30 @@ app.use(function(req, res, next){
   if(!req.path.match(/\/login|\/logout/)){
     req.session.redir=req.path;
   }
-  //hacer visible req.session en als vistas
+  //hacer visible req.session en las vistas
   res.locals.session = req.session;
   next();
+});
+
+app.use(function(req, res, next){
+  var actualTime;
+  actualTime = Date.now();
+  console.log("actual" + actualTime);
+  console.log("ultima" + req.session.lastTime);
+  if (req.session.user){
+    if ((actualTime -120000) > req.session.lastTime){
+      req.session.lastTime =actualTime;
+      res.redirect('/logout');
+    }
+    else {
+      req.session.lastTime =actualTime;
+      res.locals.session = req.session;
+      next();
+    }
+  }
+  else {
+    next();
+  }
 });
 
 app.use('/', routes);
