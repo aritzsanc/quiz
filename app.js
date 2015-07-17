@@ -29,20 +29,8 @@ app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(function(req, res, next){
-  //guardar path de session.redir para después del login
-  if(!req.path.match(/\/login|\/logout/)){
-    req.session.redir=req.path;
-  }
-  //hacer visible req.session en las vistas
-  res.locals.session = req.session;
-  next();
-});
-
-app.use(function(req, res, next){
   var actualTime;
   actualTime = Date.now();
-  console.log("actual" + actualTime);
-  console.log("ultima" + req.session.lastTime);
   if (req.session.user){
     if ((actualTime -120000) > req.session.lastTime){
       req.session.lastTime =actualTime;
@@ -57,6 +45,16 @@ app.use(function(req, res, next){
   else {
     next();
   }
+});
+
+app.use(function(req, res, next){
+  //guardar path de session.redir para después del login
+  if(!req.path.match(/\/login|\/logout/)){
+    req.session.redir=req.path;
+  }
+  //hacer visible req.session en las vistas
+  res.locals.session = req.session;
+  next();
 });
 
 app.use('/', routes);

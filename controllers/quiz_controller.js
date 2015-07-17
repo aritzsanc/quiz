@@ -31,7 +31,7 @@ exports.index = function(req, res){
 
 //GET	/quizes/:id
 exports.show = function(req, res){
-	console.log(req.quiz.comments);
+	//console.log(req.quiz.comments);
 	res.render('quizes/show', { quiz : req.quiz, errors: []});
 };
 
