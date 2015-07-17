@@ -16,7 +16,7 @@ exports.index = function(req, res){
         estadisticas.comentarios += quiz[i].comments.length;
       }
       estadisticas.preguntas = quiz.length;
-      estadisticas.media_comentarios = estadisticas.preguntas/estadisticas.comentarios;
+      estadisticas.media_comentarios = (estadisticas.preguntas/estadisticas.comentarios).toFixed(2);
       res.render('estadisticas/index', { estadisticas : estadisticas, errors: []});
     });
 }
